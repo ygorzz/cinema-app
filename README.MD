@@ -6,7 +6,7 @@ API REST para gerenciamento de um catálogo de cinema, permitindo o cadastro e a
 
 A API segue a arquitetura MVC (Model-View-Controller), com separação clara de responsabilidades entre modelos de dados, lógica de negócio e definição de rotas.
 
-A diferença do projeto dessa branch é o uso da **Referência** como abordagem para a modelagem dos dados entre as coleções **filmes** e **diretores**.
+**A diferença do projeto dessa branch é o uso da Referência como abordagem para a modelagem dos dados entre as coleções filmes e diretores**.
 
 ---
 
