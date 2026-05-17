@@ -18,7 +18,7 @@ const filmeSchema = new mongoose.Schema({
     }
   },
   diretor: {type: diretorSchema, required: [true, "Diretor do filme obrigatório"]}
-}, {versionKey: false});
+}, {versionKey: false});  
 
 const filme = mongoose.model("filmes", filmeSchema);
 

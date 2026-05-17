@@ -6,7 +6,7 @@ const routes = express.Router();
 
 routes
   .get("/diretores", DiretorController.listarDiretores)
-  .get("/diretores/:id", DiretorController.bucasDiretorPorId)
+  .get("/diretores/:id", DiretorController.buscarDiretorPorId)
   .post("/diretores", DiretorController.cadastrarDiretor)
   .put("/diretores/:id", DiretorController.atualizarDiretor)
   .delete("/diretores/:id", DiretorController.removerDiretor);
