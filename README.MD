@@ -176,7 +176,7 @@ cd cinema-api
 ```bash
 npm install
 ```
-
+  
 **3. Configure as variáveis de ambiente:**
 
 Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
