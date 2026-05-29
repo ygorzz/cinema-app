@@ -5,7 +5,8 @@ const HeaderContainer = styled.div`
   align-items: center;
   margin: 0;
   height: 70px;
-  border: 1px solid #fff;
+  border: 1px solid #333333;
+  /* background-color: #CCCCCC; */
 `;
 
 const Title = styled.h3`
