@@ -22,8 +22,8 @@ const InputSubmitElement = styled(InputElement)`
   background-color: #c41a1a;
 `;
 
-export function Form({ action, children }) {
-  return <FormElement action={action}>{children}</FormElement>;
+export function Form({onSubmit, children }) {
+  return <FormElement onSubmit={onSubmit}>{children}</FormElement>;
 }
 
 export function Input({ placeholder, type, value, name }) {

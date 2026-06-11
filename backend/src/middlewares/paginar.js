@@ -23,7 +23,7 @@ export default function paginar(req, res, next){
 }
 
 function processaOrdenacao(ordenacao){
-  const parametrosOrdenacao = {};
+  const parametrosOrdenacao = {}; 
   const [campoOrdenacao, ordem] = ordenacao.split(":");
   parametrosOrdenacao.campoOrdenacao = campoOrdenacao;
   parametrosOrdenacao.ordem = ordem;

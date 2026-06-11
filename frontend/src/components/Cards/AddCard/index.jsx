@@ -9,7 +9,7 @@ function AddCard() {
   return (
     <AddContainer titulo="Adicionar Filme">
       <Subtitle subtitle="Dados" />
-      <Form>
+      <Form action="" method="get">
         <Input placeholder="Titulo" />
         <Input placeholder="Gênero" />
         <Input placeholder="Ano de Lançamento" />
