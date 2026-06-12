@@ -15,7 +15,6 @@ class FilmeController {
   static async listarFilmes(req, res, next) {
 
     try {
-
       const filmeExiste = await filme.exists({});
       if (!filmeExiste) {
         return res.status(200).json({ message: "Não há dados cadastrados nessa coleção" });

@@ -22,23 +22,42 @@ function processaBusca(e) {
   return filtros;
 }
 
+function renderResultado(resultado, mensagem) {
+  if(resultado.length > 0) {
+    return (
+    <Resultado>
+      {resultado.map((filme) => {
+        return <p key={filme.id}>{filme.titulo}</p>;
+      })}
+    </Resultado>
+    )
+  } else if (mensagem) {
+    return (
+    <Resultado>
+      <p>{mensagem}</p>
+    </Resultado>
+    )
+  } else {
+    return null;
+  }
+}
+
 function ListCard() {
   const [resultado, setResultado] = useState([]);
-  const [temRequisicao, setTemrequisicao] = useState(false);
+  const [mensagem, setMensagem] = useState(null);
 
   async function handleGetFilmes(e) {
     e.preventDefault();
-    const filtros = processaBusca(e);
     try {
+      setResultado([]);
+      setMensagem(null);
+      const filtros = processaBusca(e);
       const data = await getFilmes(filtros);
-      if(data.resultado.length === 0){
-        setResultado(data.message);
-      } else {
-        setResultado(data.resultado)
-      }
-      setTemrequisicao(true);
+      data.result.length === 0
+        ? setMensagem(data.message)
+        : setResultado(data.result);
     } catch (error) {
-      console.log(error);
+      setMensagem(error.response.data.message);
     }
   }
 
@@ -53,13 +72,7 @@ function ListCard() {
         <Input placeholder="Ordenar" name="ordenacao" />
         <InputSubmit value="Buscar" />
       </Form>
-      {temRequisicao ? (
-        <Resultado>
-          {resultado.map((filme) => {
-            return <p key={filme.id}>{filme.titulo}</p>;
-          })}
-        </Resultado>
-      ) : null}
+      {renderResultado(resultado, mensagem)}
     </ListContainer>
   );
 }
