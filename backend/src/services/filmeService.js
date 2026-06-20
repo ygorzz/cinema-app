@@ -18,7 +18,6 @@ async function listarFilmes(query, paginacao){
   }
   validaPagina(totalDocumentos, pagina, limite);
   const listaFilmes = await FilmeRepositoy.listarFilmes(busca, {limite, skip, campoOrdenacao, ordem});
-
   return listaFilmes;
 }
 
@@ -86,8 +85,11 @@ function processaBusca(busca) {
   const { genero, anoLancamento, titulo, diretor } = busca;
   const filtros = {};
   
-  if (genero) filtros.genero = genero;
   if (anoLancamento) filtros.anoLancamento = parseInt(anoLancamento);
+  if (genero){
+    const generoLimpo = escapeRegex(genero);
+    filtros.genero = {$regex: generoLimpo, $options: "i"};
+  }
   if (titulo){
     const tituloLimpo = escapeRegex(titulo); // Evita regex injections
     filtros.titulo = { $regex: tituloLimpo, $options: "i" };

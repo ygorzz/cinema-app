@@ -72,6 +72,13 @@ function AddCard({ filmeToUpdate, setFilmeToUpdate, setReloadFilmes }) {
     try {
       const filme = processaBusca(e);
       const data = await insertFilme(filme);
+      setCampos({
+          titulo: "",
+          genero: "",
+          anoLancamento: "",
+          duracaoMinutos: "",
+          diretor: "",
+        });
       alert(data.message);
     } catch (error) {
       alert(error.response.data.message);

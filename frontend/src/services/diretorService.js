@@ -1,17 +1,23 @@
 import axios from "axios";
 
-const diretorAPI = axios.create({baseURL: "http://localhost:3000/diretores"});
+const diretorAPI = axios.create({ baseURL: "http://localhost:3000/diretores" });
 
-async function getDiretores(filtros){
+async function getDiretores(filtros = {}) {
+    if (filtros.ordenacao) {
+        const campoOrdenacao = "nome"
+        const separador = ":"
+        const ordem = filtros.ordenacao;
+        filtros.ordenacao = campoOrdenacao + separador + ordem;
+    }
     const response = await diretorAPI.get("/", {
         params: filtros
     });
-    return response.data;   
+    return response.data;
 }
 
-async function deleteDiretor(id){
+async function deleteDiretor(id) {
     const response = await diretorAPI.delete(`${id}`);
-    return response.data; 
+    return response.data;
 }
 
 async function insertDiretor(diretor) {
@@ -20,7 +26,7 @@ async function insertDiretor(diretor) {
     return response.data;
 }
 
-async function updateDiretor({_id, ...atualizacao}){
+async function updateDiretor({ _id, ...atualizacao }) {
     const response = await diretorAPI.put(`${_id}`, atualizacao);
     return response.data;
 }

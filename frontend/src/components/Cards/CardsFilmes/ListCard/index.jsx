@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import CardModel from "../../CardModel/index.jsx";
-import { Input, Form, Button } from "../../../Inputs/index.jsx";
+import { Input, Form, Button, Select, Option } from "../../../Inputs/index.jsx";
 import Subtitle from "../../Subtitle/index.jsx";
 import { deleteFilme, getFilmes } from "../../../../services/filmeService.js";
-import { useState } from "react";
-import { Trash, Edit2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Trash, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ListContainer = styled(CardModel)``;
 
@@ -34,31 +33,36 @@ const Resultado = styled.div`
   }
 `;
 
+const IconesPaginacao = styled.div`
+  margin-top: 30px;
+`;
+
 function processaBusca(e) {
   const filtros = {};
   const form = e.target;
   for (const input of form) {
-    if (input.value !== "") {
+    if (input.name && input.value !== "") {
       filtros[input.name] = input.value;
     }
   }
   return filtros;
 }
 
-function ListCard({setFilmeToUpdate, reloadFilmes, setReloadFilmes}) {
+function ListCard({ setFilmeToUpdate, reloadFilmes, setReloadFilmes }) {
   const [filmes, setFilmes] = useState([]);
   const [mensagem, setMensagem] = useState(null);
+  const [filtrosAtuais, setFiltrosAtuais] = useState({});
+  const [paginaAtual, setPaginaAtual] = useState(1);
 
-  // Emm caso de update em um filme, limpa a listade filmes que estava sendo exibida
+  // Emm caso de update em um filme, limpa a lista de filmes que estava sendo exibida
   useEffect(() => {
-    if(!reloadFilmes) return;
-    function updateFetchFilmes(){
+    if (!reloadFilmes) return;
+    function updateFetchFilmes() {
       setFilmes([]);
       setReloadFilmes(false);
     }
     updateFetchFilmes();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reloadFilmes])
+  }, [reloadFilmes]);
 
   async function handleGetFilmes(e) {
     e.preventDefault();
@@ -66,9 +70,24 @@ function ListCard({setFilmeToUpdate, reloadFilmes, setReloadFilmes}) {
     setMensagem(null);
     try {
       const filtros = processaBusca(e);
-      const data = await getFilmes(filtros);
-      data.result.length === 0
-        ? setMensagem(data.message)
+      setFiltrosAtuais(filtros);
+      buscarFilmes(filtros, 1);
+    } catch (error) {
+      setMensagem(error.response.data.message);
+    }
+  }
+
+  async function buscarFilmes(filtros, pagina) {
+    setFilmes([])
+    setPaginaAtual(pagina);
+    const params = {
+      ...filtros,
+      pagina,
+    };
+    try {
+      const data = await getFilmes(params);
+      data.result.length === 0 && Object.keys(params).length === 0
+        ? setMensagem("Não há filmes cadastrados") //
         : setFilmes(data.result);
     } catch (error) {
       setMensagem(error.response.data.message);
@@ -101,6 +120,18 @@ function ListCard({setFilmeToUpdate, reloadFilmes, setReloadFilmes}) {
               </Resultado>
             );
           })}
+          <IconesPaginacao>
+            <button
+              onClick={() => buscarFilmes(filtrosAtuais, paginaAtual - 1)}
+            >
+              <ChevronLeft></ChevronLeft>
+            </button>
+            <button
+              onClick={() => buscarFilmes(filtrosAtuais, paginaAtual + 1)}
+            >
+              <ChevronRight></ChevronRight>
+            </button>
+          </IconesPaginacao>
         </ResultadoContainer>
       );
     } else if (mensagem) {
@@ -122,8 +153,16 @@ function ListCard({setFilmeToUpdate, reloadFilmes, setReloadFilmes}) {
         <Input placeholder="Gênero" name="genero" />
         <Input placeholder="Diretor" name="diretor" />
         <Input placeholder="Ano de Lançamento" name="anoLancamento" />
-        <Input placeholder="Ordenar" name="ordenacao" />
-        <Button type="submit" color="#c41a1a">Buscar</Button>
+        <Select name="ordenacao" defaultValue="">
+          <Option value="" disabled>
+            Ordenar por
+          </Option>
+          <Option value="1">A-Z</Option>
+          <Option value="-1">Z-A</Option>
+        </Select>
+        <Button type="submit" color="#c41a1a">
+          Buscar
+        </Button>
       </Form>
       {renderResultado(filmes, mensagem)}
     </ListContainer>

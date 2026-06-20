@@ -9,11 +9,15 @@ async function contarDocumentos(busca){
 }
 
 async function listarDiretores(busca, options){
-  const {limite, skip, campoOrdenacao, ordem} = options;  
-  return await diretor.find(busca)
-    .sort({[campoOrdenacao] : ordem})
-    .skip(skip)
-    .limit(limite);
+  if(options){
+    const {limite, skip, campoOrdenacao, ordem} = options;  
+    return await diretor.find(busca)
+      .sort({[campoOrdenacao] : ordem})
+      .skip(skip)
+      .limit(limite)
+      .collation({locale: "pt" }); // Informa ao MongoDB o idioma usado para comparar, ordenar strings
+  }
+  return await diretor.find(busca);
 }
 
 async function buscarDiretorPorId(id){
@@ -26,7 +30,7 @@ async function cadastrarDiretor(novoDiretor){
 }
 
 async function atualizarDiretorPorId(id, atualizacao){
-  return await diretor.findByIdAndUpdate(id, atualizacao, {returnDocument: "after"});
+  return await diretor.findByIdAndUpdate(id, atualizacao, {returnDocument: "after", runValidators: true});
 }
 
 async function removerDiretorPorId(id){

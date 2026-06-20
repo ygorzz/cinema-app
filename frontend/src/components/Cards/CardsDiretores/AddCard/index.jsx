@@ -71,7 +71,7 @@ function AddCard({ diretorToUpdate, setDiretorToUpdate, setReloadDiretores }) {
   }
 
   return (
-    <AddContainer titulo="Adicionar Diretor">
+    <AddContainer titulo={diretorToUpdate ? "Atualizar Diretor" : "Adicionar Diretor"}>
       <Subtitle subtitle="Dados" />
       <Form
         onSubmit={diretorToUpdate ? handleUpdateDiretor : handleInsertDiretor}

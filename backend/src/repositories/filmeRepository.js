@@ -14,10 +14,11 @@ async function listarFilmes(busca, options){
     return await filme.find(busca)
       .sort({[campoOrdenacao] : ordem})
       .skip(skip)
-      .limit(limite);
+      .limit(limite)
+      .collation({locale: "pt" }); // Informa ao MongoDB o idioma usado para comparar, ordenar strings
   }
   return await filme.find(busca);
-}
+} 
 
 async function buscarFilmePorId(id) {
   return await filme.findById(id);
@@ -28,12 +29,12 @@ async function cadastrarFilme(novoFilme) {
 }
 
 async function atualizarFilmePorId(id, atualizacao) {
-  return await filme.findByIdAndUpdate(id, atualizacao, {returnDocument: "after"});
+  return await filme.findByIdAndUpdate(id, atualizacao, {returnDocument: "after", runValidators: true});
 }
 
 async function removerFilmePorId(id) {
   return await filme.findByIdAndDelete(id);
-}
+} 
 
 export {
   existe,

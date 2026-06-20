@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import {diretorSchema} from "./Diretor.js";
 
-const DURACAO_MAX = 180;
+const DURACAO_MAX = 300;
 const DURACAO_MIN = 80;
 
 const filmeSchema = new mongoose.Schema({
@@ -12,6 +12,7 @@ const filmeSchema = new mongoose.Schema({
   duracaoMinutos: {type: Number,
     validate:{
       validator: (valor) => {
+        if(valor === null) return true;
         return valor >= DURACAO_MIN && valor <= DURACAO_MAX; 
       },
       message: `O filme deve conter entre ${DURACAO_MIN} e ${DURACAO_MAX} minutos`
