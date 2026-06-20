@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import CardModel from "../../CardModel/index.jsx";
 import { Input, Form, Button, Select, Option } from "../../../Inputs/index.jsx";
-import Subtitle from "../../Subtitle/index.jsx";
+import Subtitle from "../../CardSubtitle/index.jsx";
 import { insertFilme, updateFilme } from "../../../../services/filmeService.js";
 import { useEffect, useState } from "react";
 import { getDiretores } from "../../../../services/diretorService.js";

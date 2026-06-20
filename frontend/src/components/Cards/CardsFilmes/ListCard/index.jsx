@@ -1,41 +1,14 @@
 import styled from "styled-components";
 import CardModel from "../../CardModel/index.jsx";
 import { Input, Form, Button, Select, Option } from "../../../Inputs/index.jsx";
-import Subtitle from "../../Subtitle/index.jsx";
+import Subtitle from "../../CardSubtitle/index.jsx";
 import { deleteFilme, getFilmes } from "../../../../services/filmeService.js";
 import { useEffect, useState } from "react";
 import { Trash, Edit2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Resultado, ResultadoContainer } from "../../../Resultado/index.jsx";
+import { IconesPaginacao } from "../../../IconesPaginacao/index.jsx";
 
 const ListContainer = styled(CardModel)``;
-
-const ResultadoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Resultado = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: white;
-  p {
-    font-size: 18px;
-  }
-  button {
-    background: none;
-    height: 20px;
-    cursor: pointer;
-  }
-  cursor: pointer;
-  &:hover {
-    border: 1px solid white;
-  }
-`;
-
-const IconesPaginacao = styled.div`
-  margin-top: 30px;
-`;
 
 function processaBusca(e) {
   const filtros = {};

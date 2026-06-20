@@ -1,41 +1,18 @@
 import styled from "styled-components";
 import CardModel from "../../CardModel/index.jsx";
 import { Input, Form, Button, Select, Option } from "../../../Inputs/index.jsx";
-import Subtitle from "../../Subtitle/index.jsx";
+import Subtitle from "../../CardSubtitle/index.jsx";
 import { useState } from "react";
-import { Edit2, Trash } from "lucide-react";
+import { ChevronLeft, ChevronRight, Edit2, Trash } from "lucide-react";
 import {
   deleteDiretor,
   getDiretores,
 } from "../../../../services/diretorService.js";
 import { useEffect } from "react";
+import { Resultado, ResultadoContainer } from "../../../Resultado/index.jsx";
+import { IconesPaginacao } from "../../../IconesPaginacao/index.jsx";
 
 const ListContainer = styled(CardModel)``;
-
-const ResultadoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Resultado = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: white;
-  p {
-    font-size: 18px;
-  }
-  button {
-    background: none;
-    height: 20px;
-    cursor: pointer;
-  }
-  cursor: pointer;
-  &:hover {
-    border: 1px solid white;
-  }
-`;
 
 function processaBusca(e) {
   const filtros = {};
@@ -51,6 +28,8 @@ function processaBusca(e) {
 function ListCard({ setDiretorToUpdate, reloadDiretores, setReloadDiretores }) {
   const [diretores, setDiretores] = useState([]);
   const [mensagem, setMensagem] = useState(null);
+    const [filtrosAtuais, setFiltrosAtuais] = useState({});
+  const [paginaAtual, setPaginaAtual] = useState(1);
 
   useEffect(() => {
     if (!reloadDiretores) return;
@@ -59,7 +38,7 @@ function ListCard({ setDiretorToUpdate, reloadDiretores, setReloadDiretores }) {
       setReloadDiretores(false);
     }
     updateFetchDiretores();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [reloadDiretores]);
 
   async function handleGetDiretores(e) {
@@ -68,14 +47,29 @@ function ListCard({ setDiretorToUpdate, reloadDiretores, setReloadDiretores }) {
     setMensagem(null);
     try {
       const filtros = processaBusca(e);
-      const data = await getDiretores(filtros);
-      data.result.length === 0 && Object.keys(filtros).length === 0
-        ? setMensagem("Não há diretores cadastrados")
-        : setDiretores(data.result);
+      setFiltrosAtuais(filtros);
+      buscarDiretores(filtros, 1);
     } catch (error) {
       setMensagem(error.response.data.message);
     }
   }
+
+    async function buscarDiretores(filtros, pagina) {
+      setDiretores([])
+      setPaginaAtual(pagina);
+      const params = {
+        ...filtros,
+        pagina,
+      };
+      try {
+        const data = await getDiretores(params);
+        data.result.length === 0 && Object.keys(params).length === 0
+          ? setMensagem("Não há diretores cadastrados") //
+          : setDiretores(data.result);
+      } catch (error) {
+        setMensagem(error.response.data.message);
+      }
+    }
 
   async function handleDeleteDiretor(id) {
     try {
@@ -104,6 +98,18 @@ function ListCard({ setDiretorToUpdate, reloadDiretores, setReloadDiretores }) {
               </Resultado>
             );
           })}
+          <IconesPaginacao>
+            <button
+              onClick={() => buscarDiretores(filtrosAtuais, paginaAtual - 1)}
+            >
+              <ChevronLeft></ChevronLeft>
+            </button>
+            <button
+              onClick={() => buscarDiretores(filtrosAtuais, paginaAtual + 1)}
+            >
+              <ChevronRight></ChevronRight>
+            </button>
+          </IconesPaginacao>
         </ResultadoContainer>
       );
     } else if (mensagem) {
