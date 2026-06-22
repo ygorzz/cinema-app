@@ -1,14 +1,16 @@
-# Cinema API
+# Cinema App
 
 ## Descrição
 
-API REST para gerenciamento de um catálogo de cinema, permitindo o cadastro e a consulta de **filmes** e **diretores**. O projeto foi desenvolvido como prática de estudo dos fundamentos de construção de APIs REST com Node.js, Express e MongoDB.
+Projeto fullstack para gerenciamento de um catálogo de cinema, permitindo o cadastro e a consulta de **filmes** e **diretores**. O projeto foi desenvolvido como prática de estudo dos fundamentos de construção de APIs REST com Node.js, Express e MongoDB, e consumo dessa API com React.
 
-A API segue a arquitetura MVC (Model-View-Controller), com separação clara de responsabilidades entre modelos de dados, lógica de negócio e definição de rotas.
+O **back-end** segue a arquitetura MVC (Model-View-Controller), com separação clara de responsabilidades entre modelos de dados, lógica de negócio e definição de rotas. O **front-end** foi desenvolvido com React e Vite, com foco em consumo da API e prática dos fundamentos do React.
 
 ---
 
 ## Tecnologias utilizadas
+
+### Back-end
 
 | Tecnologia | Versão | Função |
 |---|---|---|
@@ -19,51 +21,50 @@ A API segue a arquitetura MVC (Model-View-Controller), com separação clara de 
 | [nodemon](https://nodemon.io/) | — | Reinicialização automática do servidor em desenvolvimento |
 | [MongoDB Atlas](https://www.mongodb.com/atlas) | — | Banco de dados NoSQL em nuvem |
 
-A aplicação utiliza **ES Modules** (`import`/`export`) nativamente.
+### Front-end
+
+| Tecnologia | Versão | Função |
+|---|---|---|
+| [React](https://react.dev/) | — | Biblioteca para construção da interface |
+| [Vite](https://vitejs.dev/) | — | Ferramenta de build e servidor de desenvolvimento |
+| [Axios](https://axiosjs.dev/) | — | Biblioteca para requisições ao servdor |
 
 ---
 
-
 ## Estrutura do projeto
-
+ 
 ```
-cinema-api/
-├── src/
-│   ├── app.js                    # Instância e configuração do Express
-│   ├── config/
-│   │   ├── dbConnect.js          # Conexão com o MongoDB via Mongoose
-│   │   └── mongooseValidations.js# Validações globais do Mongoose
-│   ├── controllers/
-│   │   ├── diretorController.js  # Lógica de negócio para diretores (CRUD)
-│   │   └── filmeController.js    # Lógica de negócio para filmes (CRUD)
-│   ├── errors/
-│   │   ├── Erro404.js            # Erro para recurso não encontrado
-│   │   ├── ErroBase.js           # Classe base para erros customizados
-│   │   ├── ErroValidacao.js      # Erro para validações
-│   │   └── RequisicaoIncorreta.js# Erro para requisições inválidas
-│   ├── helpers/
-│   │   ├── enviaRespostaLista.js # Padroniza resposta de listas
-│   │   ├── enviaRespostaObjeto.js# Padroniza resposta de objetos
-│   │   ├── escapeRegex.js        # Sanitiza entradas para regex
-│   │   ├── validaLimite.js       # Valida limite de paginação
-│   │   └── validaPagina.js       # Valida número de página
-│   ├── middlewares/
-│   │   ├── manipulador404.js     # Middleware para 404
-│   │   ├── manipuladorDeErros.js # Middleware global de erros
-│   │   └── paginar.js            # Middleware de paginação e ordenação
-│   ├── models/
-│   │   ├── Diretor.js            # Schema/model de diretores
-│   │   └── Filmes.js             # Schema/model de filmes
-│   └── routes/
-│       ├── diretorRoutes.js      # Rotas de diretores
-│       ├── filmeRoutes.js        # Rotas de filmes
-│       └── index.js              # Centralizador de rotas
-├── server.js                     # Ponto de entrada: conecta ao BD e sobe o servidor
-├── .env                          # Variáveis de ambiente (não versionado)
-├── .gitignore
-├── eslint.config.js              # Configuração do ESLint
-├── package.json
-└── package-lock.json
+├── backend/
+│   ├── src/
+│   │   ├── config/                   # Conexão com o banco e validações globais
+│   │   ├── controllers/              # Recebe requisições e delega para os services
+│   │   ├── errors/                   # Classes de erros customizados
+│   │   ├── helpers/                  # Funções auxiliares reutilizáveis
+│   │   ├── middlewares/              # Middlewares de erro, 404 e paginação
+│   │   ├── models/                   # Schemas e models do Mongoose
+│   │   ├── repositories/             # Acesso ao banco de dados
+│   │   ├── routes/                   # Definição e centralização das rotas
+│   │   ├── services/                 # Lógica de negócio
+│   │   └── app.js                    # Instância e configuração do Express
+│   ├── .env                          # Variáveis de ambiente (não versionado)
+│   ├── eslint.config.js              # Configuração do ESLint
+│   ├── package.json
+│   ├── package-lock.json
+│   └── server.js                     # Ponto de entrada: conecta ao BD e sobe o servidor
+│
+└── frontend/
+    └── src/
+        ├── components/               # Componentes reutilizáveis React
+        ├── helpers/                  # Funções auxiliares do front-end
+        ├── routes/                   # Definição de rotas do front-end
+        ├── services/                 # Funções para comunicação com a API
+        ├── index.css                 # Estilos globais
+        └── main.jsx                  # Ponto de entrada da aplicação React
+    ├── eslint.config.js              # Configuração do ESLint
+    ├── index.html                    # HTML base da aplicação
+    ├── package.json
+    ├── package-lock.json
+    └── vite.config.js                # Configuração do Vite
 ```
 
 ---
@@ -71,9 +72,6 @@ cinema-api/
 ## Funcionalidades
 
 ### Filmes (`/filmes`)
-
-| Método | Rota | Descrição |
-|---|---|---|
 
 | Método | Rota | Descrição |
 |---|---|---|
@@ -88,7 +86,6 @@ cinema-api/
 
 - Query params: `pagina`, `limite`, `ordenacao` (ex: `/filmes?pagina=2&limite=5&ordenacao=titulo:1`)
 - Ordenação: campo e ordem (1 = crescente, -1 = decrescente)
-
 
 **Campos do filme:**
 
@@ -110,9 +107,6 @@ cinema-api/
 
 | Método | Rota | Descrição |
 |---|---|---|
-
-| Método | Rota | Descrição |
-|---|---|---|
 | `GET` | `/diretores` | Lista todos os diretores cadastrados (suporta filtros, paginação e ordenação) |
 | `GET` | `/diretores?nome=<nome>&nacionalidade=<pais>` | Lista diretores filtrados por nome ou nacionalidade |
 | `GET` | `/diretores/:id` | Busca um diretor pelo ID |
@@ -123,7 +117,6 @@ cinema-api/
 **Paginação e ordenação:**
 
 - Query params: `pagina`, `limite`, `ordenacao` (ex: `/diretores?pagina=1&limite=10&ordenacao=nome:1`)
-
 
 **Campos do diretor:**
 
@@ -136,8 +129,9 @@ cinema-api/
 
 ---
 
-
 ## Funcionalidades e diferenciais
+
+### Back-end
 
 - **Arquitetura MVC** — Separação clara entre models, controllers, rotas e middlewares.
 - **Express Router** — Modularização das rotas e centralização via arquivo index.js.
@@ -152,8 +146,15 @@ cinema-api/
 - **ES Modules** — Utilização de `import`/`export` nativamente.
 - **Linting** — Projeto configurado com ESLint para padronização de código.
 
----
+### Front-end
 
+- **React** — Construção da interface com componentes funcionais.
+- **Vite** — Build e servidor de desenvolvimento rápido.
+- **Consumo de API** — Comunicação com o back-end via camada de serviços dedicada (`services/`).
+- **Componentização** — Interface dividida em componentes reutilizáveis.
+- **Roteamento** — Navegação entre páginas gerenciada pela camada de rotas (`routes/`).
+
+---
 
 ## Como executar o projeto
 
@@ -162,13 +163,13 @@ cinema-api/
 - [Node.js](https://nodejs.org/) v18 ou superior
 - Uma instância do MongoDB (local ou [MongoDB Atlas](https://www.mongodb.com/atlas))
 
-### Passo a passo
+### Back-end
 
-**1. Clone o repositório e acesse a pasta do projeto:**
+**1. Clone o repositório e acesse a pasta do back-end:**
 
 ```bash
 git clone <url-do-repositorio>
-cd cinema-api
+cd cinema-app/backend
 ```
 
 **2. Instale as dependências:**
@@ -176,17 +177,16 @@ cd cinema-api
 ```bash
 npm install
 ```
-  
+
 **3. Configure as variáveis de ambiente:**
 
-Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+Crie um arquivo `.env` na raiz da pasta `backend` com o seguinte conteúdo:
 
 ```env
 DB_CONNECTION_STRING=mongodb+srv://<usuario>:<senha>@<cluster>.mongodb.net/<nome-do-banco>
 ```
 
 > Substitua os valores pelos dados da sua instância do MongoDB.
-
 
 **4. Inicie o servidor em modo de desenvolvimento:**
 
@@ -201,23 +201,34 @@ Conexão com o BD feita com sucesso
 Servidor rodando e aguardando requisição
 ```
 
-
 **5. Teste os endpoints:**
 
 Utilize uma ferramenta como [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) para interagir com a API em `http://localhost:3000`.
 
 ---
 
-## Observações
+### Front-end
 
-- O projeto utiliza validações customizadas e tratamento global de erros para garantir robustez.
-- O código segue padrão ESLint e utiliza ES Modules.
-- O arquivo `.env` **não** é versionado.
+**1. Em outro terminal, acesse a pasta do front-end:**
+
+```bash
+cd cinema-app/frontend
+```
+
+**2. Instale as dependências:**
+
+```bash
+npm install
+```
+
+**3. Inicie o servidor de desenvolvimento:**
+
+```bash
+npm run dev
+```
+
+A aplicação estará disponível em `http://localhost:5173` (porta padrão do Vite).
+
+> Certifique-se de que o servidor do back-end está rodando antes de iniciar o front-end.
 
 ---
-
----
-
-## Licença
-
-Este projeto está sob a licença [MIT](https://opensource.org/licenses/MIT).
