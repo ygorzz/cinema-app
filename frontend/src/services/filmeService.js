@@ -1,10 +1,10 @@
 import axios from "axios";
 import { validaOrdenacao } from "../helpers/validaOrdenacao";
 
-const filmeAPI = axios.create({ baseURL: "http://localhost:3000/filmes" });
+const filmeAPI = axios.create({ baseURL: `/api/filmes` });
 
 async function getFilmes(filtros) {
-    filtros.ordenacao = validaOrdenacao(filtros.ordenacao, "titulo");
+    filtros.ordenacao = validaOrdenacao(filtros.ordenacao, "titulo");   
     const response = await filmeAPI.get("/", {
         params: filtros
     }); 

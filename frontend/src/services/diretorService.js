@@ -1,7 +1,7 @@
 import axios from "axios";
 import { validaOrdenacao } from "../helpers/validaOrdenacao";
 
-const diretorAPI = axios.create({ baseURL: "http://localhost:3000/diretores" });
+const diretorAPI = axios.create({ baseURL: `/api/diretores` });
 
 async function getDiretores(filtros = {}) { // Objeto vazio para carregar diretores no select da page de filmes
     filtros.ordenacao = validaOrdenacao(filtros.ordenacao, "nome")
