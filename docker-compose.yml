@@ -1,0 +1,21 @@
+services:
+  nginx: 
+    image: ygorz/cinema-app-nginx:1.0
+    container_name: nginx
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
+  backend:
+    image: ygorz/cinema-app-service:1.0
+    container_name: cinema-app-service
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+
+  frontend:
+    image: ygorz/cinema-app-frontend:1.0
+    container_name: cinema-app-frontend
+    restart: unless-stopped 
+
