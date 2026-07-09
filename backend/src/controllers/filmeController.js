@@ -4,7 +4,6 @@ class FilmeController {
 
   static async listarFilmes(req, res, next) {
     const {query, paginacao} = req;
-    console.log(paginacao);
     try {
       const listaFilmes = await FilmeService.listarFilmes(query, paginacao);
       res.status(200).json({result: listaFilmes});
