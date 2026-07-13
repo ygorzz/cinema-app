@@ -31,41 +31,13 @@ O **back-end** segue a arquitetura MVC (Model-View-Controller), com separação 
 
 ---
 
-## Estrutura do projeto
- 
-```
-├── backend/
-│   ├── src/
-│   │   ├── config/                   # Conexão com o banco e validações globais
-│   │   ├── controllers/              # Recebe requisições e delega para os services
-│   │   ├── errors/                   # Classes de erros customizados
-│   │   ├── helpers/                  # Funções auxiliares reutilizáveis
-│   │   ├── middlewares/              # Middlewares de erro, 404 e paginação
-│   │   ├── models/                   # Schemas e models do Mongoose
-│   │   ├── repositories/             # Acesso ao banco de dados
-│   │   ├── routes/                   # Definição e centralização das rotas
-│   │   ├── services/                 # Lógica de negócio
-│   │   └── app.js                    # Instância e configuração do Express
-│   ├── .env                          # Variáveis de ambiente (não versionado)
-│   ├── eslint.config.js              # Configuração do ESLint
-│   ├── package.json
-│   ├── package-lock.json
-│   └── server.js                     # Ponto de entrada: conecta ao BD e sobe o servidor
-│
-└── frontend/
-    └── src/
-        ├── components/               # Componentes reutilizáveis React
-        ├── helpers/                  # Funções auxiliares do front-end
-        ├── routes/                   # Definição de rotas do front-end
-        ├── services/                 # Funções para comunicação com a API
-        ├── index.css                 # Estilos globais
-        └── main.jsx                  # Ponto de entrada da aplicação React
-    ├── eslint.config.js              # Configuração do ESLint
-    ├── index.html                    # HTML base da aplicação
-    ├── package.json
-    ├── package-lock.json
-    └── vite.config.js                # Configuração do Vite
-```
+### Infraestrutura e Deploy
+
+- **Docker** — Containerização completa do front-end, back-end e infraestrutura.
+- **Docker Compose** — Orquestração dos serviços da aplicação.
+- **Nginx** — Servidor web para o front-end React e Reverse Proxy para a API.
+- **Proxy Reverso** — Encaminhamento transparente das requisições `/api` para o back-end.
+- **Controle de Cache** — Configuração do Nginx para evitar cache do `index.html`, garantindo atualização imediata após novos deploys.
 
 ---
 
@@ -160,27 +132,22 @@ O **back-end** segue a arquitetura MVC (Model-View-Controller), com separação 
 
 ### Pré-requisitos
 
-- [Node.js](https://nodejs.org/) v18 ou superior
-- Uma instância do MongoDB (local ou [MongoDB Atlas](https://www.mongodb.com/atlas))
+- [Docker](https://www.docker.com/) 20 ou superior
+- [Docker Compose](https://docs.docker.com/compose/) (ou Docker Compose V2)
+- Uma instância do [MongoDB Atlas](https://www.mongodb.com/atlas) (ou outro banco MongoDB compatível)
 
-### Back-end
+### Passo a passo
 
-**1. Clone o repositório e acesse a pasta do back-end:**
+**1. Clone o repositório e acesse a pasta do projeto:**
 
 ```bash
 git clone <url-do-repositorio>
-cd cinema-app/backend
+cd cinema-app
 ```
 
-**2. Instale as dependências:**
+**2. Configure as variáveis de ambiente do back-end:**
 
-```bash
-npm install
-```
-
-**3. Configure as variáveis de ambiente:**
-
-Crie um arquivo `.env` na raiz da pasta `backend` com o seguinte conteúdo:
+Crie um arquivo `.env` dentro da pasta `backend` contendo:
 
 ```env
 DB_CONNECTION_STRING=mongodb+srv://<usuario>:<senha>@<cluster>.mongodb.net/<nome-do-banco>
@@ -188,47 +155,45 @@ DB_CONNECTION_STRING=mongodb+srv://<usuario>:<senha>@<cluster>.mongodb.net/<nome
 
 > Substitua os valores pelos dados da sua instância do MongoDB.
 
-**4. Inicie o servidor em modo de desenvolvimento:**
+---
+
+**3. Suba toda a aplicação utilizando o Docker Compose:**
 
 ```bash
-npm run dev
+docker compose up -d
 ```
 
-O servidor será iniciado na porta `3000`. Após a conexão com o banco ser estabelecida, as mensagens abaixo serão exibidas no terminal:
-
-```
-Conexão com o BD feita com sucesso
-Servidor rodando e aguardando requisição
-```
-
-**5. Teste os endpoints:**
-
-Utilize uma ferramenta como [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) para interagir com a API em `http://localhost:3000`.
+O Docker Compose irá iniciar todos os serviços da aplicação automaticamente.
 
 ---
 
-### Front-end
+**4. Acesse a aplicação**
 
-**1. Em outro terminal, acesse a pasta do front-end:**
+Após a inicialização dos containers, a aplicação estará disponível em:
 
-```bash
-cd cinema-app/frontend
-```
+| Serviço | Endereço |
+|---|---|
+| Front-end | `http://localhost` |
+| API | `http://localhost/api` |
 
-**2. Instale as dependências:**
-
-```bash
-npm install
-```
-
-**3. Inicie o servidor de desenvolvimento:**
-
-```bash
-npm run dev
-```
-
-A aplicação estará disponível em `http://localhost:5173` (porta padrão do Vite).
-
-> Certifique-se de que o servidor do back-end está rodando antes de iniciar o front-end.
+O front-end é servido pelo **Nginx**, que também atua como **Reverse Proxy**, encaminhando automaticamente todas as requisições iniciadas por `/api` para o back-end.
 
 ---
+
+**5. Encerrar a aplicação**
+
+Para parar todos os containers:
+
+```bash
+docker compose down
+```
+
+Caso queira remover também os volumes criados:
+
+```bash
+docker compose down -v
+```
+
+---
+
+Desenvolvido por Ygor Santos — LinkedIn | GitHub
