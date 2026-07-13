@@ -195,5 +195,3 @@ docker compose down -v
 ```
 
 ---
-
-Desenvolvido por Ygor Santos — LinkedIn | GitHub
